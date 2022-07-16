@@ -308,7 +308,7 @@
 </footer>
 
 <!-- SCRIPTS -->
-
+<script src="/core/js/test.js" type="module"></script>
 <script>
     function toggleMenu() {
         var menuItems = document.getElementsByClassName('menu-item');

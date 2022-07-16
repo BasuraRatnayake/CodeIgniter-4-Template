@@ -1,0 +1,26 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BasuraRatnayake/PC-CI4-TS-Automations.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BasuraRatnayake/PC-CI4-TS-Automations/issues"
+  },
+  "homepage": "https://github.com/BasuraRatnayake/PC-CI4-TS-Automations#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
