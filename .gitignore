@@ -3,3 +3,4 @@ package-lock.json
 node_modules
 public/core
 tests/README.md
+package-lock.json
