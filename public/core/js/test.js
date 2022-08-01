@@ -1,1 +1,0 @@
-var Test=function(){function o(){this.index=0,console.log("asda")}return o.prototype.tesgame=function(o){1<o?console.log("basura"+o):console.log("asf")},o}(),t=new Test;t.tesgame(103);

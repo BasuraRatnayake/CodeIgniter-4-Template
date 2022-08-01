@@ -1,79 +1,85 @@
-const gulp = require('gulp'); 
-const { series, watch } = gulp;
-const sass = require('gulp-sass')(require('sass'));
-const plumber = require('gulp-plumber');
-const include = require('gulp-include');
-const minifycss = require('gulp-minify-css');
-const ts = require('gulp-typescript');
-const notify = require('gulp-notify');
-const uglify = require('gulp-uglify');
-const cssprefix = require('gulp-autoprefixer');
-const image = require('gulp-imagemin');
-
+const GULP = require('gulp'); 
+const { series, watch } = GULP;
+const SASS = require('gulp-sass')(require('sass'));
+const PLUMBER = require('gulp-plumber');
+const INCLUDE = require('gulp-include');
+const MINIFY_CSS = require('gulp-minify-css');
+const TS = require('gulp-typescript');
+const NOTIFY = require('gulp-notify');
+const UGLIFY = require('gulp-uglify');
+const CSS_PREFIX = require('gulp-autoprefixer');
+const IMAGE = require('gulp-imagemin');
 
 const ASSET_PATH = 'app/Assets/**/';
 const JS_PATH = `${ASSET_PATH}*.js`;
 const TS_PATH = `${ASSET_PATH}*.ts`;
 const CSS_PATH = `${ASSET_PATH}*.css`;
 const SCSS_PATH = `${ASSET_PATH}*.scss`;
-const IMG_PATH = `${ASSET_PATH}img/*`;
+const FONT_PATH = `${ASSET_PATH}fonts/*.*`;
+const IMG_PATH = `${ASSET_PATH}img/**/*.*`;
+const DEST = 'public/core/';
 
 function errorNotify(error){
-    notify.onError({title: "Gulp Error", message: "", sound: "Sosumi"})(error); 
+    NOTIFY.onError({title: "Gulp Error", message: "", sound: "Sosumi"})(error); 
     this.emit("end");
 };
 
 function compressIMG() {
-	return gulp.src(IMG_PATH, {
+	return GULP.src(IMG_PATH, {
 		sourcemaps: true
 	})
-	.pipe(image())
-	.pipe(gulp.dest('public/core/'));
+	.pipe(IMAGE())
+	.pipe(GULP.dest(DEST));
 }
 
 function styleCSS() {
-	return gulp.src(CSS_PATH, {
+	return GULP.src(CSS_PATH, {
 		sourcemaps: true
 	})
-	.pipe(include())
-	.pipe(plumber({ errorHandler: errorNotify }))
-	.pipe(cssprefix())
-	.pipe(minifycss())
-	.pipe(gulp.dest('public/core/'));
+	.pipe(INCLUDE())
+	.pipe(PLUMBER({ errorHandler: errorNotify }))
+	.pipe(CSS_PREFIX())
+	.pipe(MINIFY_CSS())
+	.pipe(GULP.dest(DEST));
 }
 function styleSCSS() {
-	return gulp.src(SCSS_PATH, {
+	return GULP.src(SCSS_PATH, {
 		sourcemaps: true
 	})
-	.pipe(include())
-	.pipe(plumber({ errorHandler: errorNotify }))
-	.pipe(sass({ style: "compressed", noCache: true }))
-	.pipe(cssprefix())
-	.pipe(minifycss())
-	.pipe(gulp.dest('public/core/'));
+	.pipe(INCLUDE())
+	.pipe(PLUMBER({ errorHandler: errorNotify }))
+	.pipe(SASS({ style: "compressed", noCache: true }))
+	.pipe(CSS_PREFIX())
+	.pipe(MINIFY_CSS())
+	.pipe(GULP.dest(DEST));
+}
+function makeFonts() {
+	return GULP.src(FONT_PATH)
+	.pipe(GULP.dest(DEST));
 }
 
 function scriptJS() {
-	return gulp.src(JS_PATH, {
+	return GULP.src(JS_PATH, {
 		sourcemaps: true
 	})
-	.pipe(include())
-	.pipe(plumber({ errorHandler: errorNotify }))
-	.pipe(uglify())
-	.pipe(gulp.dest('public/core/'));
+	.pipe(INCLUDE())
+	.pipe(PLUMBER({ errorHandler: errorNotify }))
+	.pipe(UGLIFY())
+	.pipe(GULP.dest(DEST));
 }
 function scriptTS() {
-	return gulp.src(TS_PATH, {
+	return GULP.src(TS_PATH, {
 		sourcemaps: true
 	})
-	.pipe(include())
-	.pipe(plumber({ errorHandler: errorNotify }))
-	.pipe(ts())
-	.pipe(uglify())
-	.pipe(gulp.dest('public/core/'));
+	.pipe(INCLUDE())
+	.pipe(PLUMBER({ errorHandler: errorNotify }))
+	.pipe(TS())
+	.pipe(UGLIFY())
+	.pipe(GULP.dest(DEST));
 }
 
 function watcher() {
+	watch([CSS_PATH], makeFonts);
 	watch([CSS_PATH], styleCSS);
 	watch([SCSS_PATH], styleSCSS);
 	watch([JS_PATH], scriptJS);
@@ -81,5 +87,4 @@ function watcher() {
 	watch([IMG_PATH], compressIMG);
 }
 
-exports.default = series(scriptTS, scriptJS, styleCSS, styleSCSS, compressIMG);
-exports.watch = series(watcher);
+exports.default = series(scriptTS, scriptJS, makeFonts, styleCSS, styleSCSS, compressIMG, watcher);
